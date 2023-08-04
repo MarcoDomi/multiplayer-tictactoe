@@ -27,7 +27,7 @@ class tictactoe_board:
 class tictactoe_game:
     def __init__(self):
         self.game_board = tictactoe_board()
-        self.symbol = {'P1':'X', 'P2':'O'}
+        self.symbol = { player.P1:'X', player.P2:'O'}
         self. win_status = win_status.IN_PROGRESS
         self.current_player = player.P1
         self.valid_coord_choices = {1:(0,0), 2:(0,1), 3:(0,2), #all valid locations on game board
@@ -101,7 +101,6 @@ class tictactoe_game:
         return False
 
 
-g = tictactoe_board()
-s = g.print_board()
-print(s)
+g = tictactoe_game()
+
 
