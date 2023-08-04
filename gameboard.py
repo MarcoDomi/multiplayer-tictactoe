@@ -44,7 +44,7 @@ class tictactoe_game:
                 self.valid_coord_choices.pop(location_choice)    #when a location is used remove it as a possible valid location
 
                 #self.check_winner() #check_winner should be handled outside of object
-                return None
+                return "success"
             except KeyError:
                 return "Invalid Player" #NOTE may change to return string 
 
@@ -100,8 +100,3 @@ class tictactoe_game:
             return True
         
         return False
-
-
-g = tictactoe_game()
-
-
