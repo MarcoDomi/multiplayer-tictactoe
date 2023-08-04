@@ -15,11 +15,14 @@ class tictactoe_board:
         self.wall = '{:^5}'.format('|') 
         self.BOARD_DIMENSION = 3
 
-    def print_board(self): #NOTE might make this a tictatoe method
+    def return_board(self): 
+        board_str = ""
         for i in range(self.BOARD_DIMENSION): #NOTE might change so it returns a string that has board configuration
-            print(f"{self.board[i][0]}{self.wall}{self.board[i][1]}{self.wall}{self.board[i][2]}")
+            board_str = board_str + f"{self.board[i][0]}{self.wall}{self.board[i][1]}{self.wall}{self.board[i][2]}"
             if i != self.BOARD_DIMENSION - 1:
-                print(self.floor)
+                board_str = board_str + '\n'
+                board_str = board_str + f"{self.floor}\n"
+        return board_str
                 
 class tictactoe_game:
     def __init__(self):
@@ -31,7 +34,7 @@ class tictactoe_game:
                                     4:(1,0), 5:(1,1), 6:(1,2),
                                     7:(2,0), 8:(2,1), 9:(2,2)}
     #public methods
-    def place_symbol(self, location_choice):
+    def place_symbol(self, location_choice): #location choice is an integer
         
         if location_choice in self.valid_coord_choices:
             row, col = self.valid_coord_choices[location_choice] #store the row and col that corresponds with selected location 
@@ -97,5 +100,8 @@ class tictactoe_game:
         
         return False
 
-    
+
+g = tictactoe_board()
+s = g.print_board()
+print(s)
 
