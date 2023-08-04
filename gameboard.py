@@ -6,7 +6,7 @@ class win_status(Enum):
 
 class player(Enum):
     P1 = 1
-    p2 = 2
+    P2 = 2
 
 class tictactoe_board:
     def __init__(self):
@@ -30,7 +30,7 @@ class tictactoe_game:
         self.valid_coord_choices = {1:(0,0), 2:(0,1), 3:(0,2), #all valid locations on game board
                                     4:(1,0), 5:(1,1), 6:(1,2),
                                     7:(2,0), 8:(2,1), 9:(2,2)}
-
+    #public methods
     def place_symbol(self, location_choice):
         
         if location_choice in self.valid_coord_choices:
@@ -47,7 +47,14 @@ class tictactoe_game:
         else:
             print("Invalid board location") #NOTE might change so it returns this string
 
-    def list_same(self,item_list):
+    def check_winner(self):
+        if self.__check_column() or self.__check_row or self.__check_diagonal:
+            self.win_status = win_status.WIN
+        elif len(self.valid_coord_choices) == 0:
+            self.win_status = win_status.DRAW
+
+    #private methods
+    def __list_same(self,item_list):
         if item_list[0] != 'X' and item_list[0] != 'O':
             return False
         
@@ -58,26 +65,26 @@ class tictactoe_game:
         
         return True
     
-    def check_column(self):
+    def __check_column(self):
         for i in range(self.game_board.BOARD_DIMENSION):
             col_list = [c[i] for c in self.game_board.board]
-            if self.list_same(col_list):
+            if self.__list_same(col_list):
                 return True
         
         return False
         
-    def check_row(self):
+    def __check_row(self):
         for row in self.game_board.board:
-            if self.list_same(row):
+            if self.__list_same(row):
                 return True
         return False
     
-    def check_diagonal(self):
+    def __check_diagonal(self):
         diag1 = []
         for i in range(self.game_board.BOARD_DIMENSION):
             diag1.append(self.game_board.board[i][i])
         
-        if self.list_same(diag1):
+        if self.__list_same(diag1):
             return True
         
         diag2 = []
@@ -85,14 +92,10 @@ class tictactoe_game:
             c = self.game_board.BOARD_DIMENSION - 1 - r
             diag2.append(self.game_board.board[r][c])
         
-        if self.list_same(diag2):
+        if self.__list_same(diag2):
             return True
         
         return False
 
-    def check_winner(self):
-        if self.check_column() or self.check_row or self.check_diagonal:
-            self.win_status = win_status.WIN
-        elif len(self.valid_coord_choices) == 0:
-            self.win_status = win_status.DRAW
+    
 

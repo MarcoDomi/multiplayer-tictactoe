@@ -1,4 +1,5 @@
 import socket
+from gameboard import tictactoe_game, win_status, player
 
 host = '127.0.0.1'
 
@@ -14,12 +15,17 @@ def accept_connection(host, port):
 port1 = 9090
 port2 = 9091
 
-while True:
+while True: 
+    #NOTE make it so either client could connect first
     player1_sock = accept_connection(host, port1)
+    player1 = player.P1
     player1_sock.send(bytes("welcome player 1","utf-8"))
 
     player2_sock = accept_connection(host, port2)
+    player2 = player.P2
     player2_sock.send(bytes("welcome player 2", "utf-8"))
+
+    
 
     player1_sock.close()
     player2_sock.close()
