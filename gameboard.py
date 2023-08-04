@@ -43,12 +43,13 @@ class tictactoe_game:
                 self.game_board.board[row][col] = current_symbol #assign the current symbol to the selected location on game board
                 self.valid_coord_choices.pop(location_choice)    #when a location is used remove it as a possible valid location
 
-                self.check_winner()
+                #self.check_winner() #check_winner should be handled outside of object
+                return None
             except KeyError:
-                print("Invalid Player") #NOTE may change to return string 
+                return "Invalid Player" #NOTE may change to return string 
 
         else:
-            print("Invalid board location") #NOTE might change so it returns this string
+            return "Invalid board location" #NOTE might change so it returns this string
 
     def check_winner(self):
         if self.__check_column() or self.__check_row or self.__check_diagonal:
