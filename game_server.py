@@ -30,12 +30,22 @@ while True:
     player2 = player.P2
     player2_sock.send(bytes("welcome player 2", "utf-8"))
 
+    #create game
     game = tictactoe_game()
+    #player 1 turn
     game.current_player = player1
-
     msg = game.game_board.return_board()
+    msg = create_header(msg) + msg
+    player1_sock.send(bytes(msg, 'utf-8')) #send board to player 1
+    p1_choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
+
+    feedback_msg = game.place_symbol(p1_choice)#get feedback msg 
+    #feedback_msg = create_header(feedback_msg) + feedback_msg
+
+    msg = game.game_board.return_board() #get gameboard after placing a symbol
     msg = create_header(msg) + msg
     player1_sock.send(bytes(msg, 'utf-8'))
 
+    #close connections
     player1_sock.close()
     player2_sock.close()

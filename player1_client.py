@@ -1,9 +1,24 @@
 import socket
-def print_msg(sock):
-    headersize = 10
-    msg = sock.recv(1024).decode('utf-8')
-    msglen = int(msg[:headersize])
-    print(msglen)
+from gameboard import win_status
+
+def get_msg(sock):
+    full_msg = ''
+    new_msg = True
+
+    while True:
+        HEADERSIZE = 10
+        msg = sock.recv(16).decode('utf-8')
+
+        if new_msg:
+            msglen = int(msg[:HEADERSIZE])
+            #print("Message length:",msglen)
+            new_msg = False
+        
+        full_msg += msg
+
+        if len(full_msg) - HEADERSIZE == msglen:
+            return full_msg[HEADERSIZE:]
+
 
 host = '127.0.0.1'
 port = 9090
@@ -11,5 +26,16 @@ port = 9090
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 
-print(s.recv(1024).decode('utf-8'))
+print(s.recv(1024).decode('utf-8')) #print welcome message
+
+board = get_msg(s) #get game board
+print(board)
+
+choice = input("Choose a location:")
+s.send(bytes(choice, 'utf-8')) #send location choice
+
+board = get_msg(s)
+print(board)
+
+
 

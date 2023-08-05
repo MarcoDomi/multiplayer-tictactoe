@@ -47,7 +47,6 @@ class tictactoe_game:
                 return "success"
             except KeyError:
                 return "Invalid Player" #NOTE may change to return string 
-
         else:
             return "Invalid board location" #NOTE might change so it returns this string
 
