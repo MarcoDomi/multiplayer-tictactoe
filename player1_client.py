@@ -25,17 +25,19 @@ port = 9090
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
-
 print(s.recv(1024).decode('utf-8')) #print welcome message
 
-board = get_msg(s) #get game board
+board = get_msg(s) #get game board + game status
+game_status = int(board[-1])#store last character as game status
+board = board[:-1] #remove the last character from board string #the last character is the status of the game
 print(board)
+print(game_status)
 
 choice = input("Choose a location:")
 s.send(bytes(choice, 'utf-8')) #send location choice
 
 board = get_msg(s)
+game_status = int(board[-1])
+board = board[:-1]
 print(board)
-
-
-
+print(game_status)

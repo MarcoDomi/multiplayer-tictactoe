@@ -99,3 +99,9 @@ class tictactoe_game:
             return True
         
         return False
+
+g = tictactoe_game()
+print(g.win_status)
+g.place_symbol(8)
+g.check_winner()
+print(g.win_status)
