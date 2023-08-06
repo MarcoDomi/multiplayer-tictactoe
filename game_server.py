@@ -32,17 +32,24 @@ while True:
 
     #create game
     game = tictactoe_game()
-    #player 1 turn
-    game.current_player = player1
-    msg = game.game_board.return_board()
-    msg = create_header(msg) + msg
-    player1_sock.send(bytes(msg, 'utf-8')) #send board to player 1
-    p1_choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
 
+    #player 1 turn
+    game.current_player = player1          #set current_player to player 1
+
+    game_status = game.win_status          #set current status of the game
+    msg = game.game_board.return_board()   #return a string that contains the game board
+    msg += str(game_status.value)          #append the value of the current game status to game board string
+    msg = create_header(msg) + msg         #prepend header to msg that contains the game board string
+    player1_sock.send(bytes(msg, 'utf-8')) #send board + win status to player 1
+
+    p1_choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
     feedback_msg = game.place_symbol(p1_choice)#get feedback msg 
     #feedback_msg = create_header(feedback_msg) + feedback_msg
 
+    game.check_winner() #check if game has a winner
+    game_status = game.win_status #set current status of game again
     msg = game.game_board.return_board() #get gameboard after placing a symbol
+    msg += str(game_status.value) #append game status to game board string again
     msg = create_header(msg) + msg
     player1_sock.send(bytes(msg, 'utf-8'))
 
