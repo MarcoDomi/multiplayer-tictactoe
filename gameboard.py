@@ -51,7 +51,7 @@ class tictactoe_game:
             return "Invalid board location" #NOTE might change so it returns this string
 
     def check_winner(self):
-        if self.__check_column() or self.__check_row or self.__check_diagonal:
+        if self.__check_column() or self.__check_row() or self.__check_diagonal():
             self.win_status = win_status.WIN
         elif len(self.valid_coord_choices) == 0:
             self.win_status = win_status.DRAW
