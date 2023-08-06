@@ -31,7 +31,7 @@ board = get_msg(s) #get game board + game status
 game_status = int(board[-1])#store last character as game status
 board = board[:-1] #remove the last character from board string #the last character is the status of the game
 print(board)
-print(game_status)
+print(game_status) #NOTE delete later
 
 choice = input("Choose a location:")
 s.send(bytes(choice, 'utf-8')) #send location choice
@@ -40,4 +40,4 @@ board = get_msg(s)
 game_status = int(board[-1])
 board = board[:-1]
 print(board)
-print(game_status)
+print(game_status) #NOTE delete later
