@@ -26,17 +26,19 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 print(s.recv(1024).decode('utf-8'))
 
-board = get_msg(s)
-game_status = int(board[-1])
-board = board[:-1]
-print(board)
-print(game_status)
+game_status = game_state.IN_PROGRESS
+while game_status == game_state.IN_PROGRESS:
+    board = get_msg(s)
+    game_status = int(board[-1])
+    board = board[:-1]
+    print(board)
+    print(game_status)
 
-choice = input("Choose a location:")
-s.send(bytes(choice, 'utf-8'))
+    choice = input("Choose a location:")
+    s.send(bytes(choice, 'utf-8'))
 
-board = get_msg(s)
-game_status = int(board[-1])
-board = board[:-1]
-print(board)
-print(game_status)
+    board = get_msg(s)
+    game_status = int(board[-1])
+    board = board[:-1]
+    print(board)
+    print(game_status)

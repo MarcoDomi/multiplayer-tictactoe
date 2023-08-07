@@ -46,8 +46,9 @@ while True:
         #player 1 turn
         if turn == player1:
             send_current_game(player1_sock, game)
-            #NOTE MIGHT MOVE TO A FUNCTION
+            #NOTE MOVE TO A FUNCTION
             game.current_player = player1
+
             choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
             feedback_msg = game.place_symbol(choice)#get feedback msg for error handling #TODO implement error handling
             game.check_winner()           #check if game has a winner
@@ -58,8 +59,9 @@ while True:
         #player 2 turn
         elif turn == player2:
             send_current_game(player2_sock, game)
-            #NOTE MIGHT MOVE TO A FUNCTION
+            #NOTE MOVE TO A FUNCTION
             game.current_player = player2
+
             choice = int(player2_sock.recv(16).decode('utf-8'))
             feedback_msg = game.place_symbol(choice)
             game.check_winner()
@@ -71,7 +73,8 @@ while True:
     if game_status == game_state.WIN:
         print(f"{game.current_player} wins!")
     elif game_status == game_state.DRAW:
-        pass
+        print("it's a draw")
+        
     #close connections
     player1_sock.close()
     player2_sock.close()
