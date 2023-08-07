@@ -11,13 +11,20 @@ def get_msg(sock):
 
         if new_msg:
             msglen = int(msg[:HEADERSIZE])
-            #print("Message length:",msglen)
             new_msg = False
         
         full_msg += msg
 
         if len(full_msg) - HEADERSIZE == msglen:
             return full_msg[HEADERSIZE:]
+        
+def get_game_data(sock, game_status):
+    board = get_msg(sock)
+    game_status = int(board[-1])
+    board = board[:-1]
+    print(board)
+
+    return game_state(game_status)
 
 host = '127.0.0.1'
 port = 9091
@@ -28,17 +35,9 @@ print(s.recv(1024).decode('utf-8'))
 
 game_status = game_state.IN_PROGRESS
 while game_status == game_state.IN_PROGRESS:
-    board = get_msg(s)
-    game_status = int(board[-1])
-    board = board[:-1]
-    print(board)
-    print(game_status)
-
+    game_status = get_game_data(s, game_status)
+   
     choice = input("Choose a location:")
     s.send(bytes(choice, 'utf-8'))
 
-    board = get_msg(s)
-    game_status = int(board[-1])
-    board = board[:-1]
-    print(board)
-    print(game_status) #TODO CONVERT GAME STATUS USING ENUM TYPE
+    game_status = get_game_data(s, game_status)

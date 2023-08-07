@@ -11,7 +11,6 @@ def get_msg(sock):
 
         if new_msg:
             msglen = int(msg[:HEADERSIZE])
-            #print("Message length:",msglen)
             new_msg = False
         
         full_msg += msg
