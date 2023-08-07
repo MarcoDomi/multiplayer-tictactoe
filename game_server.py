@@ -41,36 +41,35 @@ while True:
     game.current_player = player1    #set current_player to player 1
     game_status = game.win_status    #set current status of the game
     
-    while True:
+    turn = player1
+    while game_status == game_state.IN_PROGRESS:
         #player 1 turn
-        if game.current_player == player1:
+        if turn == player1:
             send_current_game(player1_sock, game)
             #NOTE MIGHT MOVE TO A FUNCTION
+            game.current_player = player1
             choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
             feedback_msg = game.place_symbol(choice)#get feedback msg for error handling #TODO implement error handling
             game.check_winner()           #check if game has a winner
             game_status = game.win_status #set current status of game again
 
-            if game_status != game_state.IN_PROGRESS:
-                break
             send_current_game(player1_sock, game)
-            game.current_player = player2
+            turn = player2
         #player 2 turn
-        elif game.current_player == player2:
+        elif turn == player2:
             send_current_game(player2_sock, game)
             #NOTE MIGHT MOVE TO A FUNCTION
+            game.current_player = player2
             choice = int(player2_sock.recv(16).decode('utf-8'))
             feedback_msg = game.place_symbol(choice)
             game.check_winner()
             game_status = game.win_status
 
-            if game_status != game_state.IN_PROGRESS:
-                break
             send_current_game(player2_sock, game)
-            game.current_player = player1
+            turn = player1
 
     if game_status == game_state.WIN:
-        pass
+        print(f"{game.current_player} wins!")
     elif game_status == game_state.DRAW:
         pass
     #close connections
