@@ -53,7 +53,7 @@ while True:
             feedback_msg = game.place_symbol(choice)#get feedback msg for error handling #TODO implement error handling
             game.check_winner()           #check if game has a winner
             game_status = game.win_status #set current status of game again
-
+            
             send_current_game(player1_sock, game)
             turn = player2
         #player 2 turn
@@ -66,7 +66,7 @@ while True:
             feedback_msg = game.place_symbol(choice)
             game.check_winner()
             game_status = game.win_status
-
+            
             send_current_game(player2_sock, game)
             turn = player1
 
