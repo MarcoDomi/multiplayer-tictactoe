@@ -1,5 +1,5 @@
 import socket
-from gameboard import tictactoe_game, win_status, player
+from gameboard import tictactoe_game, game_state, player
 
 host = '127.0.0.1'
 
@@ -17,6 +17,13 @@ def create_header(msg):
     header = f"{len(msg):<{headersize}}"
     return header
 
+#send the current board and the games current status to player
+def send_current_game(player_sock, game):
+    msg = game.game_board.return_board()    #return a string that contains the game board
+    msg += str(game_status.value)           #append the value of the current game status to game board string
+    msg = create_header(msg) + msg          #prepend header to msg that contains the game board string
+    player_sock.send(bytes(msg, 'utf-8'))   #send board + win status to player 1
+
 port1 = 9090
 port2 = 9091
 create_header("hello")
@@ -32,27 +39,26 @@ while True:
 
     #create game
     game = tictactoe_game()
+    game.current_player = player1    #set current_player to player 1
+    game_status = game.win_status    #set current status of the game
+    
+    while game_status == game_state.IN_PROGRESS:
+        #player 1 turn
+        if game.current_player == player1:
+            send_current_game(player1_sock, game)
+        
+            p1_choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
+            feedback_msg = game.place_symbol(p1_choice)#get feedback msg for error handling #TODO implement error handling
 
-    #player 1 turn
-    game.current_player = player1          #set current_player to player 1
+            game.check_winner()           #check if game has a winner
+            game_status = game.win_status #set current status of game again
 
-    game_status = game.win_status          #set current status of the game
-    msg = game.game_board.return_board()   #return a string that contains the game board
-    msg += str(game_status.value)          #append the value of the current game status to game board string
-    msg = create_header(msg) + msg         #prepend header to msg that contains the game board string
-    player1_sock.send(bytes(msg, 'utf-8')) #send board + win status to player 1
-
-    p1_choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
-    feedback_msg = game.place_symbol(p1_choice)#get feedback msg 
-    #feedback_msg = create_header(feedback_msg) + feedback_msg
-
-    game.check_winner() #check if game has a winner
-    game_status = game.win_status #set current status of game again
-    msg = game.game_board.return_board() #get gameboard after placing a symbol
-    msg += str(game_status.value) #append game status to game board string again
-    msg = create_header(msg) + msg
-    player1_sock.send(bytes(msg, 'utf-8'))
-
+            send_current_game(player1_sock, game)
+            game.current_player = player2
+        #player 2 turn
+        elif game.current_player == player2:
+            pass
+    
     #close connections
     player1_sock.close()
     player2_sock.close()

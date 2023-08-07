@@ -1,5 +1,5 @@
 import socket
-from gameboard import win_status
+from gameboard import game_state
 
 def get_msg(sock):
     full_msg = ''

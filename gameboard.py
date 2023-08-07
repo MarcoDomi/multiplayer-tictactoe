@@ -1,5 +1,5 @@
 from enum import Enum
-class win_status(Enum):
+class game_state(Enum):
     IN_PROGRESS = 0
     WIN = 1
     DRAW = 2
@@ -28,7 +28,7 @@ class tictactoe_game:
     def __init__(self):
         self.game_board = tictactoe_board()
         self.symbol = { player.P1:'X', player.P2:'O'}
-        self. win_status = win_status.IN_PROGRESS
+        self. win_status = game_state.IN_PROGRESS
         self.current_player = player.P1
         self.valid_coord_choices = {1:(0,0), 2:(0,1), 3:(0,2), #all valid locations on game board
                                     4:(1,0), 5:(1,1), 6:(1,2),
@@ -52,9 +52,9 @@ class tictactoe_game:
 
     def check_winner(self):
         if self.__check_column() or self.__check_row() or self.__check_diagonal():
-            self.win_status = win_status.WIN
+            self.win_status = game_state.WIN
         elif len(self.valid_coord_choices) == 0:
-            self.win_status = win_status.DRAW
+            self.win_status = game_state.DRAW
 
     #private methods
     def __list_same(self,item_list):
