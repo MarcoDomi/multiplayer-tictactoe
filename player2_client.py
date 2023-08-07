@@ -41,4 +41,4 @@ while game_status == game_state.IN_PROGRESS:
     game_status = int(board[-1])
     board = board[:-1]
     print(board)
-    print(game_status)
+    print(game_status) #TODO CONVERT GAME STATUS USING ENUM TYPE
