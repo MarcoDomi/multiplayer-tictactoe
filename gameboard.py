@@ -3,6 +3,7 @@ class game_state(Enum):
     IN_PROGRESS = 0
     WIN = 1
     DRAW = 2
+    LOSS = 3
 
 class player(Enum):
     P1 = 1

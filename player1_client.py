@@ -19,7 +19,6 @@ def get_msg(sock):
         if len(full_msg) - HEADERSIZE == msglen:
             return full_msg[HEADERSIZE:]
 
-
 host = '127.0.0.1'
 port = 9090
 
