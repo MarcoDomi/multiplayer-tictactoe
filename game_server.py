@@ -1,8 +1,6 @@
 import socket
 from gameboard import tictactoe_game, game_state, player
 
-host = '127.0.0.1'
-
 def accept_connection(host, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.bind((host, port))
@@ -23,6 +21,14 @@ def send_current_game(player_sock, game):
     msg = create_header(msg) + msg          #prepend header to msg that contains the game board string
     player_sock.send(bytes(msg, 'utf-8'))   #send board + win status to player 1
 
+def play_game(player_sock, game):
+    choice = int(player_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
+    feedback_msg = game.place_symbol(choice)           #get feedback msg for error handling #TODO implement error handling
+    game.check_winner()   #check if game has a winner
+
+
+
+host = '127.0.0.1'
 port1 = 9090
 port2 = 9091
 
@@ -46,27 +52,21 @@ while True:
         #player 1 turn
         if turn == player1:
             send_current_game(player1_sock, game)
-            #NOTE MOVE TO A FUNCTION
             game.current_player = player1
 
-            choice = int(player1_sock.recv(16).decode('utf-8')) #TODO change to buffer to 1 #get player 1 choice
-            feedback_msg = game.place_symbol(choice)#get feedback msg for error handling #TODO implement error handling
-            game.check_winner()           #check if game has a winner
+            play_game(player1_sock, game)        
+
             game_status = game.win_status #set current status of game again
-            
             send_current_game(player1_sock, game)
             turn = player2
         #player 2 turn
         elif turn == player2:
             send_current_game(player2_sock, game)
-            #NOTE MOVE TO A FUNCTION
             game.current_player = player2
 
-            choice = int(player2_sock.recv(16).decode('utf-8'))
-            feedback_msg = game.place_symbol(choice)
-            game.check_winner()
+            play_game(player2_sock, game)
+
             game_status = game.win_status
-            
             send_current_game(player2_sock, game)
             turn = player1
 
