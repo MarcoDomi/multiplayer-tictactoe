@@ -17,7 +17,7 @@ def create_header(msg):
 #send the current board and the games current status to player
 def send_current_game(player_sock, game, current_turn):
     msg = game.game_board.return_board()    #return a string that contains the game board
-    msg = msg + str(game_status.value) + str(current_turn.value) #append the value of the current game status to game board string
+    msg = msg + str(game.win_status.value) + str(current_turn.value) #append the value of the current game status and current turn to game board string
     msg = create_header(msg) + msg          #prepend header to msg that contains the game board string
     player_sock.send(bytes(msg, 'utf-8'))   #send board + win status to player 1
 

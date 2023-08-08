@@ -1,5 +1,5 @@
 import socket
-from gameboard import game_state, player
+from gameboard import game_state
 
 def get_msg(sock):
     full_msg = ''
@@ -20,12 +20,13 @@ def get_msg(sock):
 
 def get_game_data(sock,game_status):
     board = get_msg(sock)       #get game board + game status
-    extra_data = board[-2:]
-    game_status = int(board[-1])#store last character as game status
-    board = board[:-1]          #remove the last character from board string #the last character is the status of the game
+    extra_data = board[-2:]     #remove the game_status and current_turn from game board string
+    game_value, turn_value = int(extra_data[0]), int(extra_data[1]) #store values for game status and current turn
+    print(game_value, turn_value) #delete
+    board = board[:-2]          #remove the last two characters from board string #the last characters are status of the game and current turn
     print(board)
 
-    return game_state(game_status)
+    return game_state(game_value), turn_value #do not convert turn_value to its respective enum-name
 
 host = '127.0.0.1'
 port = 9090
@@ -36,9 +37,12 @@ print(s.recv(1024).decode('utf-8')) #print welcome message
 
 game_status = game_state.IN_PROGRESS
 while game_status == game_state.IN_PROGRESS:
-    game_status = get_game_data(s, game_status)
+    game_status, current_turn = get_game_data(s, game_status) #why is game_status a tuple?
 
-    choice = input("Choose a location:")
-    s.send(bytes(choice, 'utf-8')) #send location choice
+    if current_turn == 1:
+        choice = input("Choose a location:")
+        s.send(bytes(choice, 'utf-8')) #send location choice
 
     game_status = get_game_data(s, game_status)
+    print("The status of game: ",game_status)
+    print("the current turn: ", current_turn)
