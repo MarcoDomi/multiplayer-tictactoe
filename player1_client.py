@@ -1,5 +1,5 @@
 import socket
-from gameboard import game_state
+from gameboard import game_state, player
 
 def get_msg(sock):
     full_msg = ''
@@ -20,6 +20,7 @@ def get_msg(sock):
 
 def get_game_data(sock,game_status):
     board = get_msg(sock)       #get game board + game status
+    extra_data = board[-2:]
     game_status = int(board[-1])#store last character as game status
     board = board[:-1]          #remove the last character from board string #the last character is the status of the game
     print(board)

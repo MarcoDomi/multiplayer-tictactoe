@@ -15,9 +15,9 @@ def create_header(msg):
     return header
 
 #send the current board and the games current status to player
-def send_current_game(player_sock, game):
+def send_current_game(player_sock, game, current_turn):
     msg = game.game_board.return_board()    #return a string that contains the game board
-    msg += str(game_status.value)           #append the value of the current game status to game board string
+    msg = msg + str(game_status.value) + str(current_turn.value) #append the value of the current game status to game board string
     msg = create_header(msg) + msg          #prepend header to msg that contains the game board string
     player_sock.send(bytes(msg, 'utf-8'))   #send board + win status to player 1
 
@@ -51,23 +51,23 @@ while True:
     while game_status == game_state.IN_PROGRESS:
         #player 1 turn
         if turn == player1:
-            send_current_game(player1_sock, game)
+            send_current_game(player1_sock, game, turn)
             game.current_player = player1
 
             play_game(player1_sock, game)        
 
             game_status = game.win_status #set current status of game again
-            send_current_game(player1_sock, game)
+            send_current_game(player1_sock, game, turn)
             turn = player2
         #player 2 turn
         elif turn == player2:
-            send_current_game(player2_sock, game)
+            send_current_game(player2_sock, game, turn)
             game.current_player = player2
 
             play_game(player2_sock, game)
 
             game_status = game.win_status
-            send_current_game(player2_sock, game)
+            send_current_game(player2_sock, game, turn)
             turn = player1
 
     if game_status == game_state.WIN:
