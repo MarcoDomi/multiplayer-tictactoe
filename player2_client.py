@@ -43,3 +43,8 @@ while game_status == game_state.IN_PROGRESS:
         s.send(bytes(choice, 'utf-8'))
 
     game_status, current_turn = get_game_data(s, game_status)
+
+if game_status == game_state.WIN:
+    print("You win!")
+elif game_status == game_state.LOSS:
+    print("You lose!")

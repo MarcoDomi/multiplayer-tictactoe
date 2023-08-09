@@ -58,6 +58,9 @@ while True:
 
             game_status = game.win_status #set current status of game again
             send_current_game(player1_sock, game, turn)
+            if game_status != game_state.IN_PROGRESS:
+                send_current_game(player2_sock, game, turn)
+
             turn = player2
         #player 2 turn
         elif turn == player2:
