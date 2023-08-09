@@ -79,6 +79,8 @@ while True:
     elif game_status == game_state.DRAW:
         print("it's a draw")
     
+    player2_sock.send(bytes('p2 is done','utf-8'))
+
     #while True:
      #   pass
     #close connections
