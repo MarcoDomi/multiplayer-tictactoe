@@ -42,7 +42,7 @@ while game_status == game_state.IN_PROGRESS:
         choice = input("Choose a location:")
         s.send(bytes(choice, 'utf-8'))
 
-    game_status, current_turn = get_game_data(s, game_status)
+        game_status, current_turn = get_game_data(s, game_status) #need to indent
 
 if game_status == game_state.WIN:
     print("You win!")
