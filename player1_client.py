@@ -44,7 +44,5 @@ while game_status == game_state.IN_PROGRESS:
 
         game_status, current_turn = get_game_data(s)
 
-if game_status == game_state.WIN:
-    print("You win!")
-elif game_status == game_state.LOSS:
-    print("You lose!")
+end_msg = s.recv(1024).decode('utf-8')
+print(end_msg)

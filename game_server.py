@@ -26,7 +26,9 @@ def play_game(player_sock, game):
     feedback_msg = game.place_symbol(choice)           #get feedback msg for error handling #TODO implement error handling
     game.check_winner()   #check if game has a winner
 
-
+def send_end_msg(p1_sock, p2_sock, msg1, msg2):
+    p1_sock.send(bytes(msg1,'utf-8'))
+    p2_sock.send(bytes(msg2,'utf-8'))
 
 host = '127.0.0.1'
 port1 = 9090
@@ -51,12 +53,12 @@ while True:
     while game_status == game_state.IN_PROGRESS:
         #player 1 turn
         if turn == player1:
-            send_current_game(player1_sock, game, turn)
             game.current_player = player1
-
+            send_current_game(player1_sock, game, turn)
+            
             play_game(player1_sock, game)        
-
             game_status = game.win_status #set current status of game again
+
             send_current_game(player1_sock, game, turn)
 
             if game_status != game_state.IN_PROGRESS:
@@ -65,13 +67,16 @@ while True:
             turn = player2
         #player 2 turn
         elif turn == player2:
-            send_current_game(player2_sock, game, turn)
             game.current_player = player2
-
+            send_current_game(player2_sock, game, turn)
+            
             play_game(player2_sock, game)
-
             game_status = game.win_status
             send_current_game(player2_sock, game, turn)
+
+            if game_status != game_state.IN_PROGRESS:
+                send_current_game(player1_sock, game, turn)
+                
             turn = player1
 
     if game_status == game_state.WIN:
@@ -79,10 +84,19 @@ while True:
     elif game_status == game_state.DRAW:
         print("it's a draw")
     
-    player2_sock.send(bytes('p2 is done','utf-8'))
-
-    #while True:
-     #   pass
-    #close connections
+    if game_status == game_state.DRAW:
+        msg = "IT'S A DRAW"
+        player1_sock.send(bytes(msg,'utf-8'))
+        player2_sock.send(bytes(msg,'utf-8'))
+    else:
+        win_msg = "YOU WIN"
+        lose_msg = "YOU LOSE"
+        if game.current_player == player1:
+            player1_sock.send(bytes(win_msg,'utf-8'))
+            player2_sock.send(bytes(lose_msg,'utf-8'))
+        else:
+            player2_sock.send(bytes(win_msg,'utf-8'))
+            player1_sock.send(bytes(lose_msg,'utf-8'))
+            
     player1_sock.close()
     player2_sock.close()

@@ -18,7 +18,7 @@ def get_msg(sock):
         if len(full_msg) - HEADERSIZE == msglen:
             return full_msg[HEADERSIZE:]
         
-def get_game_data(sock, game_status):
+def get_game_data(sock):
     board = get_msg(sock)       #get game board + game status
     extra_data = board[-2:]
     game_value, turn_value = (int(extra_data[0]), int(extra_data[1])) #store values for game status and current turn
@@ -36,18 +36,13 @@ print(s.recv(1024).decode('utf-8'))
 
 game_status = game_state.IN_PROGRESS
 while game_status == game_state.IN_PROGRESS:
-    game_status, current_turn = get_game_data(s, game_status)
+    game_status, current_turn = get_game_data(s)
     
     if current_turn == 2:
         choice = input("Choose a location:")
         s.send(bytes(choice, 'utf-8'))
-        game_status, current_turn = get_game_data(s, game_status) 
+        game_status, current_turn = get_game_data(s) 
 
 
 end_msg = s.recv(1024).decode('utf-8')
 print(end_msg)
-
-if game_status == game_state.WIN:
-    print("You win!")
-elif game_status == game_state.LOSS:
-    print("You lose!")
