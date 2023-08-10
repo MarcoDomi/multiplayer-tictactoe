@@ -2,22 +2,23 @@ import socket
 from gameboard import game_state
 
 def get_msg(sock):
-    full_msg = ''
-    new_msg = True
+    full_msg = ''  #string used to store the full message
+    new_msg = True #this is a new_msg so set to true
 
     while True:
-        HEADERSIZE = 10
-        msg = sock.recv(16).decode('utf-8')
+        HEADERSIZE = 10     #length of header being sent from server is 10 characters
+        msg = sock.recv(16).decode('utf-8') #recieve 16 bytes of msg at a time 
 
-        if new_msg:
-            msglen = int(msg[:HEADERSIZE])
-            new_msg = False
+        if new_msg:                         #if msg is a new message
+            msglen = int(msg[:HEADERSIZE])  #read up to the end of the header #convert the msg_length value in the header string to int
+            new_msg = False                 #message is no longer new so set to false
         
-        full_msg += msg
+        full_msg += msg   #append the recieved characters to the full_msg string
 
-        if len(full_msg) - HEADERSIZE == msglen:
-            return full_msg[HEADERSIZE:]
+        if len(full_msg) - HEADERSIZE == msglen: #if full_msg lenth minus headerlength is equal to value found in the header
+            return full_msg[HEADERSIZE:]         #return msg starting after end of header 
 
+#get the current state of game and the current turn
 def get_game_data(sock):
     board = get_msg(sock)       #get game board + game status
     extra_data = board[-2:]     #remove the game_status and current_turn from game board string
@@ -34,14 +35,14 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 print(s.recv(1024).decode('utf-8')) #print welcome message
 
-game_status = game_state.IN_PROGRESS
-while game_status == game_state.IN_PROGRESS:
-    game_status, current_turn = get_game_data(s) #why is game_status a tuple?
+game_status = game_state.IN_PROGRESS         #inital status of game is IN_PROGRESS
+while game_status == game_state.IN_PROGRESS: #if status of the game is IN_PROGRESS keep looping
+    game_status, current_turn = get_game_data(s) #get game_status and current_turn
 
-    if current_turn == 1:
-        choice = input("Choose a location:")
-        s.send(bytes(choice, 'utf-8')) #send location choice
-        game_status, current_turn = get_game_data(s)
+    if current_turn == 1:   #if current_turn matches w/ this player then execute follwing statements
+        choice = input("Choose a location:")  #get a location from user
+        s.send(bytes(choice, 'utf-8'))        #send location choice
+        game_status, current_turn = get_game_data(s) #get updated game_status and current_turn
 
-end_msg = s.recv(1024).decode('utf-8')
+end_msg = s.recv(1024).decode('utf-8') #recieve the end msg sent from server
 print(end_msg)
