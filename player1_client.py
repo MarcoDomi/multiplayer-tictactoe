@@ -41,7 +41,6 @@ while game_status == game_state.IN_PROGRESS:
     if current_turn == 1:
         choice = input("Choose a location:")
         s.send(bytes(choice, 'utf-8')) #send location choice
-
         game_status, current_turn = get_game_data(s)
 
 end_msg = s.recv(1024).decode('utf-8')

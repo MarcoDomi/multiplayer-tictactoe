@@ -76,7 +76,7 @@ while True:
 
             if game_status != game_state.IN_PROGRESS:
                 send_current_game(player1_sock, game, turn)
-                
+
             turn = player1
 
     if game_status == game_state.WIN:
@@ -86,17 +86,14 @@ while True:
     
     if game_status == game_state.DRAW:
         msg = "IT'S A DRAW"
-        player1_sock.send(bytes(msg,'utf-8'))
-        player2_sock.send(bytes(msg,'utf-8'))
+        send_end_msg(player1_sock, player2_sock, msg, msg)
     else:
         win_msg = "YOU WIN"
         lose_msg = "YOU LOSE"
         if game.current_player == player1:
-            player1_sock.send(bytes(win_msg,'utf-8'))
-            player2_sock.send(bytes(lose_msg,'utf-8'))
+            send_end_msg(player1_sock, player2_sock, win_msg, lose_msg)
         else:
-            player2_sock.send(bytes(win_msg,'utf-8'))
-            player1_sock.send(bytes(lose_msg,'utf-8'))
+            send_end_msg(player1_sock, player2_sock, lose_msg, win_msg)
             
     player1_sock.close()
     player2_sock.close()

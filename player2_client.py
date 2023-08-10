@@ -43,6 +43,5 @@ while game_status == game_state.IN_PROGRESS:
         s.send(bytes(choice, 'utf-8'))
         game_status, current_turn = get_game_data(s) 
 
-
 end_msg = s.recv(1024).decode('utf-8')
 print(end_msg)
