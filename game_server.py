@@ -78,11 +78,6 @@ while True:
                 send_current_game(player1_sock, game, turn)
 
             turn = player1
-
-    if game_status == game_state.WIN:
-        print(f"{game.current_player} wins!")
-    elif game_status == game_state.DRAW:
-        print("it's a draw")
     
     if game_status == game_state.DRAW:
         msg = "IT'S A DRAW"
