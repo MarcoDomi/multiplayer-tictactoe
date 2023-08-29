@@ -28,17 +28,24 @@ def get_game_data(sock):
     return game_state(game_value), turn_value #do not convert turn_value to its respective enum-name
 
 host = '127.0.0.1'
-port = 9091
-
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-print(s.recv(1024).decode('utf-8'))
+try:
+    port = 9090
+    s.connect((host, port))
+    
+except:
+    port = 9091
+    s.connect((host, port))
+    
+msg = s.recv(1024).decode('utf-8')
+print(msg) #print welcome message
+valid_turn = int(msg[-1]) #stores the valid turn for this player
 
 game_status = game_state.IN_PROGRESS
 while game_status == game_state.IN_PROGRESS:
     game_status, current_turn = get_game_data(s)
     
-    if current_turn == 2:
+    if current_turn == valid_turn:
         choice = input("Choose a location:")
         s.send(bytes(choice, 'utf-8'))
         game_status, current_turn = get_game_data(s) 
